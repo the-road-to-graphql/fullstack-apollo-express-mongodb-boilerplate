@@ -1,5 +1,5 @@
 {
-  "name": "fullstack-apollo-express-postgresql-boilerplate",
+  "name": "fullstack-apollo-express-mongodb-boilerplate",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
