@@ -70,7 +70,7 @@ export default {
       async (parent, { username }, { models, me }) => {
         return await models.User.findByIdAndUpdate(
           me.id,
-          { username: username },
+          { username },
           { new: true },
         );
       },
