@@ -68,7 +68,6 @@ export default {
     updateUser: combineResolvers(
       isAuthenticated,
       async (parent, { username }, { models, me }) => {
-        console.log({ models: models, me });
         return await models.User.findByIdAndUpdate(
           me.id,
           { username: username },

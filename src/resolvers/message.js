@@ -18,7 +18,6 @@ export default {
             },
           }
         : {};
-      console.log(cursorOptions);
       const messages = await models.Message.find(
         cursorOptions,
         null,

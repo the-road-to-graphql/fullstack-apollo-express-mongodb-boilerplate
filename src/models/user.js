@@ -13,7 +13,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     unique: true,
     required: true,
-    validate: [isEmail, 'invalid email'],
+    validate: [isEmail, 'No valid email address provided.'],
   },
   password: {
     type: String,
@@ -25,6 +25,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
   },
 });
+
 UserSchema.statics.findByLogin = async function(login) {
   let user = await this.findOne({
     username: login,
@@ -36,6 +37,7 @@ UserSchema.statics.findByLogin = async function(login) {
 
   return user;
 };
+
 UserSchema.pre('save', async function() {
   this.password = await this.generatePasswordHash();
 });
