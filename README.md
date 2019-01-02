@@ -46,7 +46,8 @@ Client Applications:
 * `npm install`
 * fill out *.env file* (see below)
 * `npm start`
-* optional visit `http://localhost:8000` for GraphQL playground
+* start MongoDB database
+* visit `http://localhost:8000` for GraphQL playground
 
 #### .env file
 
