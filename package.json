@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "nodemon --exec babel-node src/index.js",
-    "test:run-server": "TEST_DATABASE=mytestdatabase npm start",
+    "test:run-server": "TEST_DATABASE_URL=mongodb://localhost:27017/mytestdatabase npm start",
     "test:execute-test": "mocha --require @babel/register 'src/**/*.spec.js'",
     "test": "echo \"No test specified\" && exit 0"
   },

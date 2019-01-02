@@ -85,17 +85,18 @@ server.applyMiddleware({ app, path: '/graphql' });
 const httpServer = http.createServer(app);
 server.installSubscriptionHandlers(httpServer);
 
-const isTest = !!process.env.TEST_DATABASE;
-const isProduction = !!process.env.DATABASE_URL;
+const isTest = !!process.env.TEST_DATABASE_URL;
+const isProduction = process.env.NODE_ENV === 'production';
 const port = process.env.PORT || 8000;
 
 connectDb().then(async () => {
   if (isTest || isProduction) {
-    // resetDb
+    // reset database
     await Promise.all([
       models.User.remove({}),
       models.Message.remove({}),
     ]);
+
     createUsersWithMessages(new Date());
   }
 
@@ -105,40 +106,35 @@ connectDb().then(async () => {
 });
 
 const createUsersWithMessages = async date => {
-  try {
-    await models.User.create({
-      username: 'rwieruch',
-      email: 'hello@robin.com',
-      password: 'rwieruch',
-      role: 'ADMIN',
-    }).then(createdUser => {
-      return models.Message.create({
-        text: 'Published the Road to learn React',
+  await models.User.create({
+    username: 'rwieruch',
+    email: 'hello@robin.com',
+    password: 'rwieruch',
+    role: 'ADMIN',
+  }).then(createdUser => {
+    return models.Message.create({
+      text: 'Published the Road to learn React',
+      createdAt: date.setSeconds(date.getSeconds() + 1),
+      userId: createdUser._id,
+    });
+  });
+
+  await models.User.create({
+    username: 'ddavids',
+    email: 'hello@david.com',
+    password: 'ddavids',
+  }).then(createdUser => {
+    return models.Message.create(
+      {
+        text: 'Happy to release ...',
         createdAt: date.setSeconds(date.getSeconds() + 1),
         userId: createdUser._id,
-      });
-    });
-
-    await models.User.create({
-      username: 'ddavids',
-      email: 'hello@david.com',
-      password: 'ddavids',
-    }).then(createdUser => {
-      return models.Message.create(
-        {
-          text: 'Happy to release ...',
-          createdAt: date.setSeconds(date.getSeconds() + 1),
-          userId: createdUser._id,
-        },
-        {
-          text: 'Published a complete ...',
-          createdAt: date.setSeconds(date.getSeconds() + 1),
-          userId: createdUser._id,
-        },
-      );
-    });
-  } catch (e) {
-    console.log(e);
-    throw e;
-  }
+      },
+      {
+        text: 'Published a complete ...',
+        createdAt: date.setSeconds(date.getSeconds() + 1),
+        userId: createdUser._id,
+      },
+    );
+  });
 };
