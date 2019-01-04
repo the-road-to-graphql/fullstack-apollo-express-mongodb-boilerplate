@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 
-import UserModel from './user';
-import MessageModel from './message';
+import User from './user';
+import Message from './message';
 
-export function connectDb() {
+const connectDb = () => {
   if (process.env.DATABASE_URL) {
     return mongoose.connect(process.env.DATABASE_URL);
   }
@@ -11,9 +11,10 @@ export function connectDb() {
   if (process.env.TEST_DATABASE_URL) {
     return mongoose.connect(process.env.TEST_DATABASE_URL);
   }
-}
-
-export default {
-  User: UserModel,
-  Message: MessageModel,
 };
+
+const models = { User, Message };
+
+export { connectDb };
+
+export default models;

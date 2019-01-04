@@ -5,7 +5,7 @@
 A full-fledged Apollo Server with Apollo Client starter project with React and Express. [Read more about it in this tutorial to build it yourself](https://www.robinwieruch.de/graphql-apollo-server-tutorial/).
 
 Further Readings:
- * [TODO: write setup tutorial]
+ * [MongoDB Setup](https://www.robinwieruch.de/mongodb-express-setup-tutorial/)
  * [TODO: write migration tutorial]
 
 **Family of universal fullstack repositories:**
@@ -46,7 +46,7 @@ Client Applications:
 * `npm install`
 * fill out *.env file* (see below)
 * `npm start`
-* start MongoDB database
+* [start MongoDB](https://www.robinwieruch.de/mongodb-express-setup-tutorial/)
 * visit `http://localhost:8000` for GraphQL playground
 
 #### .env file
