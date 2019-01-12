@@ -2,14 +2,19 @@ import mongoose from 'mongoose';
 
 import User from './user';
 import Message from './message';
-
-const connectDb = () => {
-  if (process.env.DATABASE_URL) {
-    return mongoose.connect(process.env.DATABASE_URL);
+/**
+ * @param dbUrl
+ */
+const connectDb = (dbUrl) => {
+  if(dbUrl) {
+    return mongoose.connect(dbUrl, { useNewUrlParser: true });
   }
-
+  // order here is important
   if (process.env.TEST_DATABASE_URL) {
-    return mongoose.connect(process.env.TEST_DATABASE_URL);
+    return mongoose.connect(process.env.TEST_DATABASE_URL, { useNewUrlParser: true });
+  }
+  if (process.env.DATABASE_URL) {
+    return mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true });
   }
 };
 

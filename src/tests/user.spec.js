@@ -1,14 +1,28 @@
 import { expect } from 'chai';
 
 import * as userApi from './api';
-
+import { getUsers } from '../testUtils/userTestUtils'
+import { connectDb } from '../models';
+import mongoose from 'mongoose'
+let mongooseInstance;
+let users;
+before(async () => {
+  mongooseInstance= await connectDb('mongodb://localhost:27017/mytestdatabase');
+  users = await getUsers()
+})
+after(async () => {
+  await mongooseInstance.connection.close()
+})
 describe('users', () => {
+
   describe('user(id: String!): User', () => {
     it('returns a user when user can be found', async () => {
+      const firstUser = users[0]
+      expect(firstUser.username).to.eql('rwieruch'); 
       const expectedResult = {
         data: {
           user: {
-            id: '1',
+            id: firstUser.id,
             username: 'rwieruch',
             email: 'hello@robin.com',
             role: 'ADMIN',
@@ -16,7 +30,7 @@ describe('users', () => {
         },
       };
 
-      const result = await userApi.user({ id: '1' });
+      const result = await userApi.user({ id: firstUser.id });
 
       expect(result.data).to.eql(expectedResult);
     });
@@ -27,8 +41,8 @@ describe('users', () => {
           user: null,
         },
       };
-
-      const result = await userApi.user({ id: '42' });
+      // we are generating a random object id that should not be in the database
+      const result = await userApi.user({ id: new mongoose.Types.ObjectId()  });
 
       expect(result.data).to.eql(expectedResult);
     });
@@ -40,13 +54,13 @@ describe('users', () => {
         data: {
           users: [
             {
-              id: '1',
+              id: users[0].id,
               username: 'rwieruch',
               email: 'hello@robin.com',
               role: 'ADMIN',
             },
             {
-              id: '2',
+              id: users[1].id,
               username: 'ddavids',
               email: 'hello@david.com',
               role: null,
@@ -78,7 +92,7 @@ describe('users', () => {
       const expectedResult = {
         data: {
           me: {
-            id: '1',
+            id: users[0].id,
             username: 'rwieruch',
             email: 'hello@robin.com',
           },
@@ -117,15 +131,16 @@ describe('users', () => {
         email: 'mark@gmule.com',
         password: 'asdasdasd',
       });
-
+      // referesh users from db to assert on
+      users = await getUsers();
       const {
         data: {
           data: { me },
         },
       } = await userApi.me(token);
-
+      
       expect(me).to.eql({
-        id: '3',
+        id: users[2].id,
         username: 'Mark',
         email: 'mark@gmule.com',
       });
@@ -175,10 +190,10 @@ describe('users', () => {
         login: 'ddavids',
         password: 'ddavids',
       });
-
+      const adminUserId = users[0].id;
       const {
         data: { errors },
-      } = await userApi.deleteUser({ id: '1' }, token);
+      } = await userApi.deleteUser({ id: adminUserId }, token);
 
       expect(errors[0].message).to.eql('Not authorized as admin.');
     });
