@@ -66,7 +66,7 @@ export default {
       isAuthenticated,
       isMessageOwner,
       async (parent, { id }, { models }) => {
-        return await models.Message.findByIdAndRemove(id);
+        return await models.Message.findOneAndDelete({_id: id});
       },
     ),
   },
