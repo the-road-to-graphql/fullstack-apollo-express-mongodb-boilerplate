@@ -24,6 +24,9 @@ const UserSchema = new mongoose.Schema({
   role: {
     type: String,
   },
+  messages: [
+    { type: mongoose.Schema.Types.ObjectId, ref: 'Message' },
+  ],
 });
 
 UserSchema.statics.findByLogin = async function(login) {

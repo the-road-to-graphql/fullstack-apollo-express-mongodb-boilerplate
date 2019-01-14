@@ -93,8 +93,8 @@ connectDb().then(async () => {
   if (isTest || isProduction) {
     // reset database
     await Promise.all([
-      models.User.remove({}),
-      models.Message.remove({}),
+      models.User.deleteMany({}),
+      models.Message.deleteMany({}),
     ]);
 
     createUsersWithMessages(new Date());
@@ -106,35 +106,42 @@ connectDb().then(async () => {
 });
 
 const createUsersWithMessages = async date => {
-  await models.User.create({
+  const user1 = new models.User({
     username: 'rwieruch',
     email: 'hello@robin.com',
     password: 'rwieruch',
     role: 'ADMIN',
-  }).then(createdUser => {
-    return models.Message.create({
-      text: 'Published the Road to learn React',
-      createdAt: date.setSeconds(date.getSeconds() + 1),
-      userId: createdUser._id,
-    });
+  });
+  const user1Messege = new models.Message({
+    text: 'Published the Road to learn React',
+    createdAt: date.setSeconds(date.getSeconds() + 1),
+    userId: user1.id,
   });
 
-  await models.User.create({
+  const user2 = new models.User({
     username: 'ddavids',
     email: 'hello@david.com',
     password: 'ddavids',
-  }).then(createdUser => {
-    return models.Message.create(
-      {
-        text: 'Happy to release ...',
-        createdAt: date.setSeconds(date.getSeconds() + 1),
-        userId: createdUser._id,
-      },
-      {
-        text: 'Published a complete ...',
-        createdAt: date.setSeconds(date.getSeconds() + 1),
-        userId: createdUser._id,
-      },
-    );
   });
+  const user2Message1 = new models.Message({
+    text: 'Happy to release ...',
+    createdAt: date.setSeconds(date.getSeconds() + 1),
+    userId: user2.id,
+  });
+
+  const user2Message2 = new models.Message({
+    text: 'Published a complete ...',
+    createdAt: date.setSeconds(date.getSeconds() + 1),
+    userId: user2.id,
+  });
+  await Promise.all([
+    user1Messege.save(),
+    user2Message1.save(),
+    user2Message2.save(),
+  ]);
+  user1.messages.push(user1Messege.id);
+  user2.messages.push(user2Message1.id);
+  user2.messages.push(user2Message2.id);
+
+  await Promise.all([user1.save(), user2.save()]);
 };

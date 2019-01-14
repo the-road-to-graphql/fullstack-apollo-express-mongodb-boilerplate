@@ -1,24 +1,25 @@
 import { expect } from 'chai';
 
 import * as userApi from './api';
-import { getUsers } from '../testUtils/userTestUtils'
+import { getUsers } from '../testUtils/userTestUtils';
 import { connectDb } from '../models';
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 let mongooseInstance;
 let users;
 before(async () => {
-  mongooseInstance= await connectDb('mongodb://localhost:27017/mytestdatabase');
-  users = await getUsers()
-})
+  mongooseInstance = await connectDb(
+    'mongodb://localhost:27017/mytestdatabase',
+  );
+  users = await getUsers();
+});
 after(async () => {
-  await mongooseInstance.connection.close()
-})
+  await mongooseInstance.connection.close();
+});
 describe('users', () => {
-
   describe('user(id: String!): User', () => {
     it('returns a user when user can be found', async () => {
-      const firstUser = users[0]
-      expect(firstUser.username).to.eql('rwieruch'); 
+      const firstUser = users[0];
+      expect(firstUser.username).to.eql('rwieruch');
       const expectedResult = {
         data: {
           user: {
@@ -42,7 +43,9 @@ describe('users', () => {
         },
       };
       // we are generating a random object id that should not be in the database
-      const result = await userApi.user({ id: new mongoose.Types.ObjectId()  });
+      const result = await userApi.user({
+        id: new mongoose.Types.ObjectId(),
+      });
 
       expect(result.data).to.eql(expectedResult);
     });
@@ -138,7 +141,7 @@ describe('users', () => {
           data: { me },
         },
       } = await userApi.me(token);
-      
+
       expect(me).to.eql({
         id: users[2].id,
         username: 'Mark',
