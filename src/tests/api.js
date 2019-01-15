@@ -127,3 +127,30 @@ export const deleteUser = async (variables, token) =>
         }
       : null,
   );
+
+export const messages = async (variables, token) => axios.post(API_URL, {
+  query: `
+  query {
+    messages (limit: 2) {
+        edges {
+          text
+        }
+      }
+    }
+  `
+})
+
+export const messagesInclUsers = async (token) => axios.post(API_URL, {
+  query: `
+  query {
+    messages (limit: 2) {
+        edges {
+          text
+          user {
+            username
+          }
+        }
+      }
+    }
+  `
+})

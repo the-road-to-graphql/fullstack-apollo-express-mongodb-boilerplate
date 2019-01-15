@@ -134,14 +134,13 @@ const createUsersWithMessages = async date => {
     createdAt: date.setSeconds(date.getSeconds() + 1),
     userId: user2.id,
   });
-  await Promise.all([
-    user1Messege.save(),
-    user2Message1.save(),
-    user2Message2.save(),
-  ]);
+   await user1Messege.save();
+    await user2Message1.save();
+    await user2Message2.save();
   user1.messages.push(user1Messege.id);
   user2.messages.push(user2Message1.id);
   user2.messages.push(user2Message2.id);
 
-  await Promise.all([user1.save(), user2.save()]);
+  await user1.save();
+  await user2.save();
 };
