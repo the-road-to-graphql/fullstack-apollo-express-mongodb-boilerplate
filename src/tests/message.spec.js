@@ -1,30 +1,22 @@
 import { expect } from 'chai';
 
 import * as api from './api';
-import { getUsers } from '../testUtils/userTestUtils';
-import { connectDb } from '../models';
-let mongooseInstance;
-let token;
+import models, { connectDb } from '../models';
+
+let db;
+
 before(async () => {
-  mongooseInstance = await connectDb(
-    'mongodb://localhost:27017/mytestdatabase',
-  );
-  users = await getUsers();
-  const { data } = await api.signIn({
-    login: 'rwieruch',
-    password: 'rwieruch',
-  });
-  token = data.data.signIn.token;
+  db = await connectDb('mongodb://localhost:27017/mytestdatabase');
 });
+
 after(async () => {
-  await mongooseInstance.connection.close();
+  await db.connection.close();
 });
 
 describe('Messages', () => {
   describe('messages (limit: INT)', () => {
-    it('should get messages', async () => {
-      const { data } = await api.messages(undefined, token);
-      expect(data).to.eql({
+    it('returns a list of messages', async () => {
+      const expectedResult = {
         data: {
           messages: {
             edges: [
@@ -37,7 +29,11 @@ describe('Messages', () => {
             ],
           },
         },
-      });
+      };
+
+      const result = await api.messages();
+
+      expect(result.data).to.eql(expectedResult);
     });
 
     it('should get messages with the users', async () => {
@@ -60,9 +56,11 @@ describe('Messages', () => {
             ],
           },
         },
-      }
-      const { data } = await api.messagesInclUsers(undefined, token);
-      expect(data).to.eql(expectedResult);
+      };
+
+      const result = await api.messagesInclUsers();
+
+      expect(result.data).to.eql(expectedResult);
     });
   });
 });

@@ -128,8 +128,9 @@ export const deleteUser = async (variables, token) =>
       : null,
   );
 
-export const messages = async (variables, token) => axios.post(API_URL, {
-  query: `
+export const messages = async () =>
+  axios.post(API_URL, {
+    query: `
   query {
     messages (limit: 2) {
         edges {
@@ -137,11 +138,12 @@ export const messages = async (variables, token) => axios.post(API_URL, {
         }
       }
     }
-  `
-})
+  `,
+  });
 
-export const messagesInclUsers = async (token) => axios.post(API_URL, {
-  query: `
+export const messagesInclUsers = async () =>
+  axios.post(API_URL, {
+    query: `
   query {
     messages (limit: 2) {
         edges {
@@ -152,5 +154,5 @@ export const messagesInclUsers = async (token) => axios.post(API_URL, {
         }
       }
     }
-  `
-})
+  `,
+  });
