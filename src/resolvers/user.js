@@ -79,9 +79,14 @@ export default {
     deleteUser: combineResolvers(
       isAdmin,
       async (parent, { id }, { models }) => {
-        return await models.User.findOneAndDelete({ _id: id }).then(
-          () => true,
-        );
+        const user = await models.User.findById(id);
+
+        if (user) {
+          await user.remove();
+          return true;
+        } else {
+          return false;
+        }
       },
     ),
   },
