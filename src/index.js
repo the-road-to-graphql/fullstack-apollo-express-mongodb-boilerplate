@@ -112,35 +112,35 @@ const createUsersWithMessages = async date => {
     password: 'rwieruch',
     role: 'ADMIN',
   });
-  const user1Messege = new models.Message({
-    text: 'Published the Road to learn React',
-    createdAt: date.setSeconds(date.getSeconds() + 1),
-    userId: user1.id,
-  });
 
   const user2 = new models.User({
     username: 'ddavids',
     email: 'hello@david.com',
     password: 'ddavids',
   });
-  const user2Message1 = new models.Message({
+
+  const message1 = new models.Message({
+    text: 'Published the Road to learn React',
+    createdAt: date.setSeconds(date.getSeconds() + 1),
+    userId: user1.id,
+  });
+
+  const message2 = new models.Message({
     text: 'Happy to release ...',
     createdAt: date.setSeconds(date.getSeconds() + 1),
     userId: user2.id,
   });
 
-  const user2Message2 = new models.Message({
+  const message3 = new models.Message({
     text: 'Published a complete ...',
     createdAt: date.setSeconds(date.getSeconds() + 1),
     userId: user2.id,
   });
-  await user1Messege.save();
-  await user2Message1.save();
-  await user2Message2.save();
-  user1.messages.push(user1Messege.id);
-  user2.messages.push(user2Message1.id);
-  user2.messages.push(user2Message2.id);
 
-  await user1.save();
-  await user2.save();
+  message1.save();
+  message2.save();
+  message3.save();
+
+  user1.save();
+  user2.save();
 };
