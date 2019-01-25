@@ -12,7 +12,7 @@ import {
 
 import schema from './schema';
 import resolvers from './resolvers';
-import models, { sequelize } from './models';
+import models, { connectDb } from './models';
 import loaders from './loaders';
 
 const app = express();
@@ -85,12 +85,18 @@ server.applyMiddleware({ app, path: '/graphql' });
 const httpServer = http.createServer(app);
 server.installSubscriptionHandlers(httpServer);
 
-const isTest = !!process.env.TEST_DATABASE;
-const isProduction = !!process.env.DATABASE_URL;
+const isTest = !!process.env.TEST_DATABASE_URL;
+const isProduction = process.env.NODE_ENV === 'production';
 const port = process.env.PORT || 8000;
 
-sequelize.sync({ force: isTest || isProduction }).then(async () => {
+connectDb().then(async () => {
   if (isTest || isProduction) {
+    // reset database
+    await Promise.all([
+      models.User.deleteMany({}),
+      models.Message.deleteMany({}),
+    ]);
+
     createUsersWithMessages(new Date());
   }
 
@@ -100,42 +106,41 @@ sequelize.sync({ force: isTest || isProduction }).then(async () => {
 });
 
 const createUsersWithMessages = async date => {
-  await models.User.create(
-    {
-      username: 'rwieruch',
-      email: 'hello@robin.com',
-      password: 'rwieruch',
-      role: 'ADMIN',
-      messages: [
-        {
-          text: 'Published the Road to learn React',
-          createdAt: date.setSeconds(date.getSeconds() + 1),
-        },
-      ],
-    },
-    {
-      include: [models.Message],
-    },
-  );
+  const user1 = new models.User({
+    username: 'rwieruch',
+    email: 'hello@robin.com',
+    password: 'rwieruch',
+    role: 'ADMIN',
+  });
 
-  await models.User.create(
-    {
-      username: 'ddavids',
-      email: 'hello@david.com',
-      password: 'ddavids',
-      messages: [
-        {
-          text: 'Happy to release ...',
-          createdAt: date.setSeconds(date.getSeconds() + 1),
-        },
-        {
-          text: 'Published a complete ...',
-          createdAt: date.setSeconds(date.getSeconds() + 1),
-        },
-      ],
-    },
-    {
-      include: [models.Message],
-    },
-  );
+  const user2 = new models.User({
+    username: 'ddavids',
+    email: 'hello@david.com',
+    password: 'ddavids',
+  });
+
+  const message1 = new models.Message({
+    text: 'Published the Road to learn React',
+    createdAt: date.setSeconds(date.getSeconds() + 1),
+    userId: user1.id,
+  });
+
+  const message2 = new models.Message({
+    text: 'Happy to release ...',
+    createdAt: date.setSeconds(date.getSeconds() + 1),
+    userId: user2.id,
+  });
+
+  const message3 = new models.Message({
+    text: 'Published a complete ...',
+    createdAt: date.setSeconds(date.getSeconds() + 1),
+    userId: user2.id,
+  });
+
+  message1.save();
+  message2.save();
+  message3.save();
+
+  user1.save();
+  user2.save();
 };

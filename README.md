@@ -4,7 +4,18 @@
 
 A full-fledged Apollo Server with Apollo Client starter project with React and Express. [Read more about it in this tutorial to build it yourself](https://www.robinwieruch.de/graphql-apollo-server-tutorial/).
 
-**This repository is the fullstack Apollo Server with Express and MongoDB project. You can find a working client application that can be used with this server in the list below:**
+Further Readings:
+ * [MongoDB Setup](https://www.robinwieruch.de/mongodb-express-setup-tutorial/)
+ * [TODO: write migration tutorial]
+
+**Family of universal fullstack repositories:**
+
+Server Applications:
+
+* [Node.js with Express + MongoDB](https://github.com/the-road-to-graphql/fullstack-apollo-express-mongodb-boilerplate)
+* [Node.js with Express + PostgreSQL](https://github.com/the-road-to-graphql/fullstack-apollo-express-postgresql-boilerplate)
+
+Client Applications:
 
 * [React Client](https://github.com/the-road-to-graphql/fullstack-apollo-react-boilerplate)
 
@@ -35,31 +46,26 @@ A full-fledged Apollo Server with Apollo Client starter project with React and E
 * `npm install`
 * fill out *.env file* (see below)
 * `npm start`
-* optional visit `http://localhost:8000` for GraphQL playground
+* [start MongoDB](https://www.robinwieruch.de/mongodb-express-setup-tutorial/)
+* visit `http://localhost:8000` for GraphQL playground
 
 #### .env file
 
-Since this boilerplate project is using MongoDB, you have to install it for your machine and get a database up and running. You find everything for the set up over here: [Setup MongoDB with Mongoose in Express Tutorial](https://www.robinwieruch.de/mongodb-express-setup-tutorial) [TODO: write tutorial]. After you have created a database and a database user, you can fill out the environment variables in the *server/.env* file.
+Since this boilerplate project is using MongoDB, you have to install it for your machine and get a database up and running. You find everything for the set up over here: [Setup MongoDB with Mongoose in Express Tutorial](https://www.robinwieruch.de/mongodb-express-setup-tutorial) [TODO: write setup tutorial]. After you have created a MongoDB database, you can fill out the environment variables in the *server/.env* file.
 
 ```
-DATABASE=mydatabase
-
-DATABASE_USER=postgres
-DATABASE_PASSWORD=postgres
-
 SECRET=asdlplplfwfwefwekwself.2342.dawasdq
+
+DATABASE_URL=mongodb://localhost:27017/mydatabase
 ```
 
 The `SECRET` is just a random string for your authentication. Keep all these information secure by adding the *.env* file to your *.gitignore* file. No third-party should have access to this information.
 
 #### Testing
 
-[TODO: change psql to MongoDB equivalent]
-
-* adjust `test:run-server` npm script with `TEST_DATABASE` environment variable in package.json to match your testing database name
-  * to match it from package.json: `createdb mytestdatabase` with psql
+* adjust `test:run-server` npm script with `TEST_DATABASE_URL` environment variable in package.json to match your testing database name
 * one terminal: npm run test:run-server
-* second terminal: test:execute-test
+* second terminal: npm run test:execute-test
 
 ## Want to learn more about React + GraphQL + Apollo?
 

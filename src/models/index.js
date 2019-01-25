@@ -1,32 +1,26 @@
-import Sequelize from 'sequelize';
+import mongoose from 'mongoose';
 
-let sequelize;
-if (process.env.DATABASE_URL) {
-  sequelize = new Sequelize(process.env.DATABASE_URL, {
-    dialect: 'postgres',
-  });
-} else {
-  sequelize = new Sequelize(
-    process.env.TEST_DATABASE || process.env.DATABASE,
-    process.env.DATABASE_USER,
-    process.env.DATABASE_PASSWORD,
-    {
-      dialect: 'postgres',
-    },
-  );
-}
+import User from './user';
+import Message from './message';
 
-const models = {
-  User: sequelize.import('./user'),
-  Message: sequelize.import('./message'),
+const connectDb = () => {
+  if (process.env.TEST_DATABASE_URL) {
+    return mongoose.connect(
+      process.env.TEST_DATABASE_URL,
+      { useNewUrlParser: true },
+    );
+  }
+
+  if (process.env.DATABASE_URL) {
+    return mongoose.connect(
+      process.env.DATABASE_URL,
+      { useNewUrlParser: true },
+    );
+  }
 };
 
-Object.keys(models).forEach(key => {
-  if ('associate' in models[key]) {
-    models[key].associate(models);
-  }
-});
+const models = { User, Message };
 
-export { sequelize };
+export { connectDb };
 
 export default models;
