@@ -137,10 +137,10 @@ const createUsersWithMessages = async date => {
     userId: user2.id,
   });
 
-  message1.save();
-  message2.save();
-  message3.save();
+  await message1.save();
+  await message2.save();
+  await message3.save();
 
-  user1.save();
-  user2.save();
+  await user1.save();
+  await user2.save();
 };
