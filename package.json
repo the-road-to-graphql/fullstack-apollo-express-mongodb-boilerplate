@@ -40,6 +40,6 @@
     "jsonwebtoken": "^8.4.0",
     "mongoose": "^5.3.14",
     "uuid": "^3.3.2",
-    "validator": "^10.9.0"
+    "validator": "^11.0.0"
   }
 }
