@@ -10,7 +10,8 @@
     "start": "nodemon --exec babel-node src/index.js",
     "test:run-server": "TEST_DATABASE_URL=mongodb://localhost:27017/mytestdatabase npm start",
     "test:execute-test": "TEST_DATABASE_URL=mongodb://localhost:27017/mytestdatabase mocha --require @babel/register 'src/**/*.spec.js'",
-    "test": "echo \"No test specified\" && exit 0"
+    "test": "echo \"No test specified\" && exit 0",
+    "format": "npx prettier --config .prettierrc --write 'src/**/*.js'"
   },
   "keywords": [],
   "author": "Robin Wieruch <hello@rwieruch.com> (https://www.robinwieruch.de)",
